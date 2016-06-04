@@ -11,18 +11,26 @@ def avg_sim(rating_pairs):
 
 class MRMlens(MRJob):
 
-	def mapper_arrange(self,_,line):
-		line=line.strip()
-		parts = line.split("::")
-		user_id = parts[0]
-		movie_id = parts[1]
-		rating = parts[2]
-		yield user_id, movie_id+','+rating
-	def reducer_arrange(self,user_id,pairs):
-		res = ""
-		for pair in pairs:
-			res = res+pair+' '
-		yield user_id, res
+	def mapper_arrange(self, _, line):
+		try:
+			line=line.strip()
+			parts = line.split("::")
+			user_id = parts[0]
+			movie_id = parts[1]
+			rating = parts[2]
+			yield int(user_id), (int(movie_id), float(rating))
+		except:
+			pass
+
+
+	def reducer_arrange(self, user_id, movie_rating_pairs):
+		user_ratings = []
+		for movie_id, rating in movie_rating_pairs:
+			user_ratings.append((movie_id, rating))
+
+		yield user_id, user_ratings
+
+
 	def mapper_groupmv(self,user_id,line):
 		mvr_pairs = line.split(" ")
 		for i in range(0,len(mvr_pairs)-2):
@@ -40,8 +48,8 @@ class MRMlens(MRJob):
 		yield mvpair, sim
 	def steps(self):
 		return [
-			MRStep(mapper=self.mapper_arrange,reducer = self.reducer_arrange),
-			MRStep(mapper=self.mapper_groupmv,reducer = self.reducer_groupmv)
+			MRStep(mapper=self.mapper_arrange ,reducer = self.reducer_arrange),
+			#MRStep(mapper=self.mapper_groupmv,reducer = self.reducer_groupmv)
 		]	
 if __name__ == '__main__':
 	MRMlens.run()	
