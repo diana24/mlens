@@ -55,7 +55,7 @@ class MRMlens(MRJob):
 			movie1_ratings.append(rating1)
 			movie2_ratings.append(rating2)
 			cnt += 1
-		s = pearson_similarity(movie1_ratings, movie2_ratings)
+		s = pearson_similarity_normalized(movie1_ratings, movie2_ratings)
 		yield (movie1, movie2), (s, cnt)
 
 	# JOB 3
