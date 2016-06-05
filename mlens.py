@@ -5,6 +5,7 @@ from mrjob.protocol import JSONValueProtocol
 from mrjob.step import MRStep
 from operator import itemgetter
 from itertools import combinations
+from correlations import *
 import sys
 
 class MRMlens(MRJob):
@@ -45,12 +46,14 @@ class MRMlens(MRJob):
 		cnt = 0
 		avg = 0
 		movie1, movie2 = movies_pair # movies_pair is a generator
-		for rating0, rating1 in ratings_pair:
-		    avg = avg + (float(rating0) + float(rating1))/2.0
-		    cnt += 1
-		avg = avg / cnt
-		yield (movie1, movie2), (avg, cnt)
-
+		movie1_ratings = []
+		movie2_ratings = []
+		for rating1, rating2 in ratings_pair:
+			movie1_ratings.append(rating1)
+			movie2_ratings.append(rating2)
+			cnt += 1
+		s = pearson_similarity(movie1_ratings, movie2_ratings)
+		yield (movie1, movie2), (s, cnt)
 
 	# JOB 3
 	# ----------------------------------------
