@@ -52,10 +52,25 @@ class MRMlens(MRJob):
 		yield (movie1, movie2), (avg, cnt)
 
 
+	# JOB 3
+	# ----------------------------------------
+	# Mapper: (movie_id1, similarity) (movie_id2, count)
+	def mapper_similarity(self, movies_pair, similarity_and_count):
+	    similarity, cnt = similarity_and_count
+	    movie1, movie2 = movies_pair
+	    yield (movie1, similarity), (movie2, cnt)
+
+	# Reducer: (movie_id1, movie_id2, similarity, cnt)
+	def reducer_similarity(self, movie_similarity_pair, similar_movie_count_pair):
+		movie1, similarity = movie_similarity_pair
+		for movie2, cnt in similar_movie_count_pair:
+			yield (movie1, movie2), (similarity, cnt)
+
 	def steps(self):
 		return [
 			MRStep(mapper=self.mapper_arrange, reducer = self.reducer_arrange),
-			MRStep(mapper=self.mapper_groupmv, reducer = self.reducer_groupmv)
+			MRStep(mapper=self.mapper_groupmv, reducer = self.reducer_groupmv),
+			MRStep(mapper=self.mapper_similarity, reducer = self.reducer_similarity)
 		]
 
 if __name__ == '__main__':
