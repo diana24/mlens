@@ -6,7 +6,7 @@ def normalize(ratings):
 	meanr = numpy.mean(ratings)
 	sd = numpy.std(ratings,ddof=1)
 	norm_ratings = (ratings - meanr)/sd
-	return numpy.array(norm_ratings).tolist()
+	return norm_ratings
 
 def pearson_similarity(data1, data2):
     return numpy.corrcoef(data1, data2)[0, 1]
