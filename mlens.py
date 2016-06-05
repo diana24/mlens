@@ -1,12 +1,15 @@
 #!/usr/bin/python
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "."))
+
 from mrjob.job import MRJob
 from mrjob.protocol import JSONValueProtocol
 from mrjob.step import MRStep
 from operator import itemgetter
 from itertools import combinations
 from correlations import *
-import sys
 
 class MRMlens(MRJob):
 
