@@ -43,6 +43,11 @@ Starting from Cloudera image run:
     sudo yum install numpy scipy
     python ./mlens.py m-small/ratings.dat
 
+To run on HADOOP:
+    tar -czvf mlens.tgz m-small/ correlations.py
+    python mlens.py m-small/ratings.dat --python-archive mlens.tgz -r hadoop
+
+
 ### HADOOP Jobs description
 1. Initial data arranging
 
