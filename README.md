@@ -40,6 +40,7 @@ Use pyrecsys (http://ocelma.net/software/python-recsys/build/html/algorithm.html
 Starting from Cloudera image run:
 
     sudo easy_install mrjob
+    sudo yum install numpy scipy
     python ./mlens.py m-small/ratings.dat
 
 ### HADOOP Jobs description
