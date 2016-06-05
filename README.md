@@ -44,14 +44,18 @@ Starting from Cloudera image run:
 
 ### HADOOP Jobs description
 1. Initial data arranging
-    Map: Emit  <User_ID Movie_ID Rating >
-    Reduce: For each <User_ID pair all their (Movie_ID, Rating)>
+
+    Map: Emit  User_ID  (Movie_ID, Rating)
+    Reduce: For each User_ID pair all their (Movie_ID, Rating)
 2. Matching Pairs
-    Map: Emit <(Movie_ID, Movie_ID) (Rating, Rating)> from the reducer output in Job 1 for all User_ID pairs
+
+    Map: Emit(Movie_ID, Movie_ID) (Rating, Rating) from the reducer output in Job 1 for all User_ID pairs
     Reduce: For multiple (Movie_ID, Movie_ID) pairs calculate rating avg/similarity
+
 3. Interpret Results
-    Map: Emit <Movie_ID Movie_ID_comparable Similarity Count> from the reducer output in Job 2
-    Reducer: Reduce multiple Movie_ID and Sort <Movie_ID (Movie_ID_comparable_1, Movie_ID_comparable_2) (similarity average?)
+
+    Map: Emit Movie_ID Movie_ID_comparable Similarity Count from the reducer output in Job 2
+    Reducer: Reduce multiple Movie_ID and sort Movie_ID (Movie_ID_comparable_1, Movie_ID_comparable_2) (similarity average?)
 
 
 ## Other ideas: 
