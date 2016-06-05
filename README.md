@@ -1,11 +1,13 @@
 # Project: Movie Similarities
-Implementation of a Movie Recommendation System using MapReduce/SVD. Data used from MovieLens database: <http://grouplens.org/datasets/movielens/>
+Implementation of a Movie Recommendation System using MapReduce/SVD. 
+
+Data used from MovieLens database: <http://grouplens.org/datasets/movielens/>
 
 ## MovieLens data structure
 <http://files.grouplens.org/papers/ml-1m-README.txt>
 - ratings.dat : Contains user IDs, movie IDs, ratings on 5 star scale and time stamp.
 
-    userid::movieid::rating::timestamp
+        userid::movieid::rating::timestamp
   
     - userid ranges from 1 to 6040
     - movieid ranges from 1 to 3952
@@ -14,13 +16,13 @@ Implementation of a Movie Recommendation System using MapReduce/SVD. Data used f
 
 - movies.dat : Contains movie IDs, titles and genres.
 
-     movieID::title::genres
+        movieID::title::genres
 
     Titles are movie titles and genres are pipe-separated and are selected from the following genres: Action, Adventure, Animation, Children’s, Comedy, Crime, Documentary, Drama, Fantasy, Film-Noir, Horror, Musical, Mystery, Romance, Sci-Fi, Thriller, War, Western
 
 - users.dat : Contains user IDs, genders, ages, occupations and zip-codes.
 
-    userid::gender::age::occupation::zip-code
+        userid::gender::age::occupation::zip-code
 
     - gender is M or F
     - age is categorized as 1, 18, 25, 35,45, 50, 56. The meanings are: 
