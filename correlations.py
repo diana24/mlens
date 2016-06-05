@@ -35,8 +35,8 @@ def pearson_similarity_normalized(data1, data2):
     b = norm1 * norm2
 
     s = ( t / float(b)) if b else 0.0
-    
-    return (s + 1.0) / 2.0
+    return s
+    #return (s + 1.0) / 2.0
 
 
 def pearson_similarity_custom(data1, data2):
