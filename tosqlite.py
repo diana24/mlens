@@ -3,8 +3,6 @@
 import sqlite3
 import sys
 
-fin = open(sys.argv[1])
-
 def convert_similarities(fname, dboutname):
     dbout = sqlite3.connect(dboutname)
     dbout.text_factory = str
