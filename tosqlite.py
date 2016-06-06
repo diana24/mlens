@@ -10,7 +10,6 @@ def convert_similarities(fname, dboutname):
     dbout.execute("create index if not exists leftindex on similarities(left)")
     dbout.execute("create index if not exists rightindex on similarities(right)")
     dbout.execute("delete from similarities")
-    dbout.execute("insert into similarities (left, right, similarity, count) values (1, 2, 3.5, 4)")
     i = 0
     with open(fname) as fin:
         for line in fin:
