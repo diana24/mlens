@@ -66,7 +66,7 @@ def uimain():
     allm = read_movielist(sys.argv[1])
     threshold = 0.8
     if len(sys.argv) > 3:
-        threshold = float(sys.argv[3])
+        threshold = float(sys.argv[4])
     find_similar_pretty(int(sys.argv[3]), threshold, allr, allm)
 
 if __name__ == '__main__':
