@@ -73,7 +73,7 @@ def show_similar(movie_id, similarities, movies_dict):
         for g in movies_dict[movie_id][1]:
             if g in movies_dict[id][1]:
                 score += 1
-        if score < 2:
+        if score < 1:
             continue
 
         m.append((id, similarities["ratings"][i][0],  similarities["ratings"][i][1], score))
@@ -86,7 +86,7 @@ def show_similar(movie_id, similarities, movies_dict):
 
     for movie in sorted_similar_movies:
         id = movie[0]
-        print("%s Similarity %s by %s people. Score: %d" % (movies_dict[id][0], movie[1], movie[2], movie[3]))
+        print("%s Similarity %.2f by %s people. Score: %d" % (movies_dict[id][0], movie[1], movie[2], movie[3]))
 
 
 
@@ -97,9 +97,9 @@ def uimain():
         threshold = float(sys.argv[4])
     movie_id = int(sys.argv[3])
     similarities = read_similarities(sys.argv[2], movie_id, threshold)
-    print similarities
+    #print similarities
     movies_dict = read_movies(sys.argv[1], similarities['movies'])
-    print movies_dict
+    #print movies_dict
     show_similar(movie_id, similarities, movies_dict)
 
 if __name__ == '__main__':
