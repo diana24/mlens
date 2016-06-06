@@ -1,6 +1,26 @@
 import numpy
 import scipy
-from math import sqrt
+from math import *
+
+def manhattan_similarity(x,y):
+	m = min(len(x),len(y))
+	sum = 0
+	for i in range(m):
+		sum += abs(x[i]-y[i])/2
+	return 1-(sum/float(m))
+
+def square_rooted(x):
+	return round(sqrt(sum([a*a for a in x])),3)
+
+def cosine_similarity(x,y):
+	num = sum(a*b for a,b in zip(x,y))
+	den = square_rooted(x)*square_rooted(y)
+	return round(num/float(den),3)
+
+def jaccard_similarity(x,y):
+	ic = len(set.intersection(*[set(x), set(y)]))
+	uc = len(set.union(*[set(x), set(y)]))
+	return ic/float(uc)
 
 def normalize(ratings):
 	meanr = numpy.mean(ratings)
