@@ -41,6 +41,26 @@ def read_similarities(fname, movie_id, threshold):
 
     return allratings
 
+# Sort by score, number of ratings, then similarity
+# And in REVERSE
+def smart_cmp(x, y):
+    # Score goes first
+    if x[3] < y[3]:
+        return 1
+    elif x[3] > y[3]:
+        return -1
+    # No of ratings second
+    if x[2] < y[2]:
+        return 1
+    elif x[2] > y[2]:
+        return -1
+    # Similarity third
+    if x[1] < y[1]:
+        return 1
+    elif x[1] > y[1]:
+        return -1
+    return 0
+
 
 def show_similar(movie_id, similarities, movies_dict):
     print("Movie %s Genres: %s is similar to:" % (movies_dict[movie_id][0], movies_dict[movie_id][1]))
@@ -60,11 +80,13 @@ def show_similar(movie_id, similarities, movies_dict):
 
 
 
-        sorted_similar_movies = sorted(sorted(sorted(m, key=lambda x : x[1]), key=lambda x : x[3]), key=lambda x : x[2])
+        #sorted_similar_movies = sorted(sorted(sorted(m, key=lambda x : x[1]), key=lambda x : x[3]), key=lambda x : x[2])
 
-        for movie in sorted_similar_movies:
-            id = movie[0]
-            print("%s Similarity %s by %s people. Score: %d" % (movies_dict[id][0], movie[1], movie[2], movie[3]))
+    sorted_similar_movies = sorted(m, cmp=smart_cmp)
+
+    for movie in sorted_similar_movies:
+        id = movie[0]
+        print("%s Similarity %s by %s people. Score: %d" % (movies_dict[id][0], movie[1], movie[2], movie[3]))
 
 
 
