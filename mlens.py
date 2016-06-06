@@ -35,7 +35,7 @@ class MRMlens(MRJob):
 		for movie_id, rating in movie_rating_pairs:
 			movie_ids.append(movie_id)
 			movie_ratings.append(rating)
-		movie_ratings = normalize(movie_ratings)
+		#movie_ratings = normalize(movie_ratings)
 		for i in range(0,len(movie_ratings)-1):
 			user_ratings.append([movie_ids[i], movie_ratings[i]])
 		yield user_id, user_ratings
