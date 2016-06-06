@@ -5,7 +5,7 @@ from math import sqrt
 def normalize(ratings):
 	meanr = numpy.mean(ratings)
 	sd = numpy.std(ratings,ddof=1)
-	norm_ratings = (ratings - meanr)/sd
+	norm_ratings = (ratings - meanr)/ (sd + 0.001)
 	return numpy.array(norm_ratings).tolist()
 
 def pearson_similarity(data1, data2):
