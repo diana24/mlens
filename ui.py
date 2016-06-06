@@ -1,73 +1,84 @@
 #!/usr/bin/python
 
 import sys
+import json
 
-def read_movielist(fname):
-    allmovies = []
+def read_movies(fname, movie_list):
+    allmovies = {}
     with open(fname) as fin:
         for line in fin:
             fields = line.split('::')
             if len(fields) >= 3:
                 movie_id = int(fields[0])
-                movie_name = fields[1]
-                movie_genre = fields[2]
-                allmovies.append((movie_id, movie_name, movie_genre))
+                if movie_id in movie_list:
+                    movie_name = fields[1]
+                    movie_genre = fields[2].strip().split("|")
+                    allmovies[movie_id] = (movie_name, movie_genre)
     return allmovies
 
-def read_similarities(fname):
-    allratings = []
+def read_similarities(fname, movie_id, threshold):
+    movies = [movie_id]
+    ratings = [(0, 0)]
     with open(fname) as fin:
         for line in fin:
-            end = line.find(']')
-            # ignore lines that don't have at least 1 ]
-            if end > 0:
-                pair = line[:end+1]
-                rating = line[end+2:]
-                # Safety, http://lybniz2.sourceforge.net/safeeval.html
-                aa = eval(pair, {'__builtins__':None}, {})
-                bb = eval(rating, {'__builtins__':None}, {})
-                bb[0] = round(bb[0], 3)
-                cc = [aa, bb]
-                #print cc
-                allratings.append(cc)
+            pair, rating = line.strip().split(']\t', 1)
+            pair = json.loads(pair + ']')
+            if pair[0] != movie_id:
+                #print("Id: %s != %s" % (pair[0], movie_id))
+                continue
+
+            rating = json.loads(rating)
+            if rating[0] < threshold:
+                #print("Id: %s threshold %s < %s" % (movie_id, rating[0], threshold))
+                continue
+            movies.append(pair[1])
+            ratings.append((rating[0], rating[1]))
+
+    allratings = {
+        'movies': movies,
+        'ratings': ratings,
+    }
+
     return allratings
 
-def find_similar(movie_id, threshold, allr):
-    res = []
-    for i in allr:
-        other_movie_id = -1
-        if movie_id == i[0][0]:
-            other_movie_id = i[0][1]
-        if movie_id == i[0][1]:
-            other_movie_id = i[0][0]
-        if other_movie_id >= 0:
-            if (i[1][0] - threshold) >= 0:
-                res.append([other_movie_id, i[1][0], i[1][1]])
-    return res
 
-def movie_name_by_id(movie_id, movies):
-    for rec in movies:
-        if rec[0] == movie_id:
-            return rec[1]
-    return "Unknown Movie"
+def show_similar(movie_id, similarities, movies_dict):
+    print("Movie %s Genres: %s is similar to:" % (movies_dict[movie_id][0], movies_dict[movie_id][1]))
+    m = []
+    for i in range(len(similarities["movies"])):
+        id = similarities["movies"][i]
+        if id == movie_id:
+            continue
+        score = 0
+        for g in movies_dict[movie_id][1]:
+            if g in movies_dict[id][1]:
+                score += 1
+        if score < 2:
+            continue
 
-def find_similar_pretty(movie_id, threshold, allr, movies):
-    tmp = find_similar(movie_id, threshold, allr)
-    if len(tmp) == 0:
-        print "No movie is similar to", movie_name_by_id(movie_id, movies), "[", movie_id, "]"
-        return
-    print "Movies similar to", movie_name_by_id(movie_id, movies), "[", movie_id, "]"
-    for sim in tmp:
-        print movie_name_by_id(sim[0], movies), "[", sim[0], "]", "similarity", sim[1], "by", sim[2], "people"
+        m.append((id, similarities["ratings"][i][0],  similarities["ratings"][i][1], score))
+
+
+
+        sorted_similar_movies = sorted(sorted(sorted(m, key=lambda x : x[1]), key=lambda x : x[3]), key=lambda x : x[2])
+
+        for movie in sorted_similar_movies:
+            id = movie[0]
+            print("%s Similarity %s by %s people. Score: %d" % (movies_dict[id][0], movie[1], movie[2], movie[3]))
+
+
 
 
 def uimain():
-    allr = read_similarities(sys.argv[2])
-    allm = read_movielist(sys.argv[1])
     threshold = 0.8
-    if len(sys.argv) > 3:
+    if len(sys.argv) > 4:
         threshold = float(sys.argv[4])
-    find_similar_pretty(int(sys.argv[3]), threshold, allr, allm)
+    movie_id = int(sys.argv[3])
+    similarities = read_similarities(sys.argv[2], movie_id, threshold)
+    print similarities
+    movies_dict = read_movies(sys.argv[1], similarities['movies'])
+    print movies_dict
+    show_similar(movie_id, similarities, movies_dict)
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
